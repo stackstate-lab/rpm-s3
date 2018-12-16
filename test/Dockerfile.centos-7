@@ -1,0 +1,7 @@
+
+FROM centos:7
+RUN rpm -iUvh http://dl.fedoraproject.org/pub/epel/7/x86_64/Packages/e/epel-release-7-11.noarch.rpm
+
+RUN mkdir -p /etc/rpm_s3
+
+RUN yum install -y deltarpm python-deltarpm yum python-pip gnupg2 rpm-sign which
