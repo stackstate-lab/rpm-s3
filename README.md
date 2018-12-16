@@ -1,6 +1,6 @@
 # rpm-s3
 
-[![Build Status](https://travis-ci.com/voronenko/rpm-s3.svg?branch=master)](https://travis-ci.com/voronenko/rpm-s3)
+[![Build Status](https://travis-ci.com/Voronenko/rpm-s3.svg?branch=master)](https://travis-ci.com/voronenko/rpm-s3)
 
 This small tool allows you to maintain YUM repositories of RPM packages on S3. The code is largely derived from [s3yum-updater](https://github.com/rockpack/s3yum-updater).
 
@@ -12,10 +12,10 @@ If you're looking for the same kind of tool, but for APT repositories, I can rec
 
 1. You have python installed (2.6+).
 
-1. You have your S3 credentials available in the `AWS_ACCESS_KEY` and `AWS_SECRET_KEY` environment variables:
+1. You have your S3 credentials available in the `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` environment variables:
 
-        export AWS_ACCESS_KEY="key"
-        export AWS_SECRET_KEY="secret"
+        export AWS_ACCESS_KEY_ID="key"
+        export AWS_SECRET_ACCESS_KEY="secret"
 
 ## Installation
 
@@ -39,7 +39,7 @@ Use the provided `/test/test.sh` script:
 
     vagrant up
     vagrant ssh
-    AWS_ACCESS_KEY=xx AWS_SECRET_KET=yy BUCKET=zz ./test/test.sh
+    AWS_ACCESS_KEY=xx AWS_SECRET_ACCESS_KEY=yy BUCKET=zz ./test/test.sh
 
 Also:
 
@@ -66,7 +66,7 @@ Have a `~/.rpmmacros` file ready with the following content:
 
 Pass the `--sign` option to `rpm-s3`:
 
-    AWS_ACCESS_KEY="key" AWS_SECRET_KEY="secret" ./rpm-s3 --sign my-app-1.0.0.x86_64.rpm
+    AWS_ACCESS_KEY_ID="key" AWS_SECRET_ACCESS_KEY="secret" ./rpm-s3 --sign my-app-1.0.0.x86_64.rpm
 
 In case if private key is password protected, you need to have gpg agent preconfigured with password.
 
