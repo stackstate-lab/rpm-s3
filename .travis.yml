@@ -1,0 +1,62 @@
+---
+sudo: required
+
+env:
+#  - distribution='ubuntu'
+#    version='14.04'
+#    init='/sbin/init'
+#    run_opts=''
+  - distribution='ubuntu'
+    version='16.04'
+    init='/sbin/init'
+    run_opts='--security-opt seccomp=unconfined --tmpfs /run --tmpfs /run/lock -v /sys/fs/cgroup:/sys/fs/cgroup:ro'
+    RPMS3_EXTRA_PARAMS='--expect'
+#  - distribution='ubuntu'
+#    version='18.04'
+#    init='/sbin/init'
+#    run_opts='--security-opt seccomp=unconfined --tmpfs /run --tmpfs /run/lock -v /sys/fs/cgroup:/sys/fs/cgroup:ro'
+#  - distribution='fedora'
+#    version='25'
+#    init='/usr/sbin/init'
+#    run_opts=''
+  - distribution='centos'
+    version='7'
+    init='/usr/lib/systemd/systemd'
+    run_opts='--privileged'
+    RPMS3_EXTRA_PARAMS='--expect'
+
+
+## whitelist
+# branches:
+#   only:
+#     - master
+#     - develop
+
+services:
+  - docker
+
+before_install:
+  # Pull container
+  - 'sudo docker pull ${distribution}:${version}'
+  # Customize container
+  - 'sudo mkdir -p /tmp/cgroup/systemd && sudo mount -t cgroup systemd /tmp/cgroup/systemd -o ro,noexec,nosuid,nodev,none,name=systemd'
+  - 'cd test && cp Dockerfile.${distribution}-${version} Dockerfile'
+script:
+  - 'docker-compose down'
+  - 'docker-compose up -d --build'
+  - 'docker-compose ps'
+
+  - 'docker-compose exec rpms3 bash -c "cd /etc/rpm_s3 && ./test/0_init.sh"'
+  # Check minio initialized test pkgr-development-rpm bucket (some workaround specific to travis)
+  -  docker-compose exec rpms3 bash -c "aws --endpoint-url http://minio1:9000/  s3api create-bucket --bucket pkgr-development-rpm || true"
+  - 'docker-compose exec rpms3 bash -c "aws --endpoint-url http://minio1:9000/ s3 ls s3://" | grep pkgr-development-rpm || travis_terminate 1;'
+
+  - 'docker-compose exec rpms3 bash -c "cd /etc/rpm_s3 && ./test/1_test_upload.sh"'
+
+  - 'docker-compose exec rpms3 bash -c "cd /etc/rpm_s3 && ./test/0_init_signing.sh"'
+
+  - 'docker-compose exec rpms3 bash -c "cd /etc/rpm_s3 && ./test/2_test_signing.sh"'
+
+  # Clean up
+  - 'docker-compose down'
+
