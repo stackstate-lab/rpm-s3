@@ -1,6 +1,6 @@
 # rpm-s3
 
-[![Build Status](https://travis-ci.com/Voronenko/rpm-s3.svg?branch=master)](https://travis-ci.com/voronenko/rpm-s3)
+[![Build Status](https://travis-ci.com/Voronenko/rpm-s3.svg?branch=master)](https://travis-ci.com/Voronenko/rpm-s3)
 
 This small tool allows you to maintain YUM repositories of RPM packages on S3. The code is largely derived from [s3yum-updater](https://github.com/rockpack/s3yum-updater).
 
