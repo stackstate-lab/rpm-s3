@@ -52,6 +52,12 @@ from utils import _gzipOpen, compressFile, compressOpen, checkAndMakeDir, GzipFi
 from utils import num_cpus_online
 import deltarpms
 
+try:
+    from urlparse import uses_relative, uses_netloc, urlsplit, urlunsplit, uses_fragment
+except ImportError as error:
+    from urllib.parse import uses_relative, uses_netloc, urlsplit, urlunsplit, uses_fragment
+
+
 __version__ = '0.9.9'
 
 
@@ -1271,12 +1277,11 @@ class SplitMetaDataGenerator(MetaDataGenerator):
         MetaDataGenerator.__init__(self, config_obj=config_obj, callback=None)
 
     def _getFragmentUrl(self, url, fragment):
-        import urlparse
-        urlparse.uses_fragment.append('media')
+        uses_fragment.append('media')
         if not url:
             return url
-        (scheme, netloc, path, query, fragid) = urlparse.urlsplit(url)
-        return urlparse.urlunsplit((scheme, netloc, path, query, str(fragment)))
+        (scheme, netloc, path, query, fragid) = urlsplit(url)
+        return urlunsplit((scheme, netloc, path, query, str(fragment)))
 
     def doPkgMetadata(self):
         """all the heavy lifting for the package metadata"""

@@ -4,7 +4,6 @@
 import os
 import sys
 import time
-import urlparse
 import tempfile
 import shutil
 import optparse
@@ -17,6 +16,11 @@ import pexpect
 from botocore.errorfactory import ClientError
 
 try:
+    from urlparse import uses_relative, uses_netloc, urlsplit, urlunsplit
+except ImportError as error:
+    from urllib.parse import uses_relative, uses_netloc, urlsplit, urlunsplit
+
+try:
     from rpm_s3.vendor.createrepo import createrepo
 except ImportError:
     sys.path.append(os.getcwd())
@@ -24,8 +28,8 @@ except ImportError:
 import rpm_s3
 
 # Hack for creating s3 urls
-urlparse.uses_relative.append('s3')
-urlparse.uses_netloc.append('s3')
+uses_relative.append('s3')
+uses_netloc.append('s3')
 
 class LoggerCallback(object):
     def errorlog(self, message):
@@ -40,7 +44,7 @@ class LoggerCallback(object):
 class S3Grabber(object):
     def __init__(self, baseurl, visibility, extra_options=None):
         logging.info('S3Grabber: %s', baseurl)
-        base = urlparse.urlsplit(baseurl)
+        base = urlsplit(baseurl)
         self.baseurl = baseurl
         self.basepath = base.path.lstrip('/')
         self.s3 = get_client(extra_options)
@@ -112,12 +116,12 @@ class S3Grabber(object):
 class FileGrabber(object):
     def __init__(self, baseurl):
         logging.info('FileGrabber: %s', baseurl)
-        self.basepath = urlparse.urlsplit(baseurl).path
+        self.basepath = urlsplit(baseurl).path
         logging.info('basepath: %s', self.basepath)
 
     def urlgrab(self, url, filename, **kwargs):
         """Expects url of the form: file:///path/to/file"""
-        filepath = urlparse.urlsplit(url).path
+        filepath = urlsplit(url).path
         realfilename = os.path.join(self.basepath, filepath)
         logging.info('fetching: %s', realfilename)
         # The filename name is REALLY important for createrepo as it derives
@@ -191,7 +195,7 @@ def setup_repository(repo, repopath):
 def update_repodata(repopath, rpmfiles, options):
     logging.info('rpmfiles: %s', rpmfiles)
     tmpdir = tempfile.mkdtemp()
-    s3base = urlparse.urlunsplit(('s3', options.bucket, repopath, '', ''))
+    s3base = urlunsplit(('s3', options.bucket, repopath, '', ''))
     s3grabber = S3Grabber(s3base, options.visibility, options)
     filegrabber = FileGrabber("file://" + os.getcwd())
 
