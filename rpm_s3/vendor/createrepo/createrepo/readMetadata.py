@@ -57,14 +57,14 @@ class MetadataIndex(object):
         self.pkg_tups_by_path = {}
         try:
             self.scan()
-        except YumBaseError, e:
-            print "Could not find valid repo at: %s" % self.outputdir
+        except YumBaseError as e:
+            print("Could not find valid repo at: %s" % self.outputdir)
         
 
     def scan(self):
         """Read in old repodata"""
         if self.opts.get('verbose'):
-            print _("Scanning old repo data")
+            print(_("Scanning old repo data"))
         self._repo.sack.populate(self._repo, 'all', None, False)
         for thispo in self._repo.sack:
             mtime = thispo.filetime
@@ -72,10 +72,10 @@ class MetadataIndex(object):
             relpath = thispo.relativepath
             do_stat = self.opts.get('do_stat', True)
             if mtime is None:
-                print _("mtime missing for %s") % relpath
+                print(_("mtime missing for %s") % relpath)
                 continue
             if size is None:
-                print _("size missing for %s") % relpath
+                print(_("size missing for %s") % relpath)
                 continue
             if do_stat:
                 filepath = os.path.join(self.opts['pkgdir'], relpath)
@@ -90,11 +90,11 @@ class MetadataIndex(object):
                 #check size and mtime
                 if st.st_size != size:
                     if self.opts.get('verbose'):
-                        print _("Size (%i -> %i) changed for file %s") % (size,st.st_size,filepath)
+                        print(_("Size (%i -> %i) changed for file %s") % (size,st.st_size,filepath))
                     continue
                 if int(st.st_mtime) != mtime:
                     if self.opts.get('verbose'):
-                        print _("Modification time changed for %s") % filepath
+                        print(_("Modification time changed for %s") % filepath)
                     continue
 
             self.pkg_tups_by_path[relpath] = thispo.pkgtup
@@ -119,7 +119,7 @@ if __name__ == "__main__":
     idx = MetadataIndex(cwd, opts)
     for fn in idx.pkg_tups_by_path:
         po = idx.getNodes(fn)
-        print po.xml_dump_primary_metadata()
-        print po.xml_dump_filelists_metadata()
-        print po.xml_dump_other_metadata()
+        print(po.xml_dump_primary_metadata())
+        print(po.xml_dump_filelists_metadata())
+        print(po.xml_dump_other_metadata())
 

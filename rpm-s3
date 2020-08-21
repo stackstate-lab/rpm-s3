@@ -149,8 +149,8 @@ def sign_pexpect(rpmfile):
         child.expect('Enter pass phrase: ')
         child.sendline('')
         child.expect(pexpect.EOF)
-    except pexpect.EOF, e:
-        print "Unable to sign package '%s' - %s" % (rpmfile, child.before)
+    except pexpect.EOF as e:
+        print("Unable to sign package '%s' - %s" % (rpmfile, child.before))
         logging.error("Unable to sign package: %s", e)
         exit(1)
 
@@ -160,8 +160,8 @@ def sign_agent(rpmfile):
     logging.info(cmd)
     try:
         subprocess.check_call(cmd)
-    except subprocess.CalledProcessError, e:
-        print "Unable to sign package '%s'" % (rpmfile)
+    except subprocess.CalledProcessError as e:
+        print("Unable to sign package '%s'" % (rpmfile))
         logging.error("Unable to sign package: %s", e)
         exit(1)
 
@@ -172,8 +172,8 @@ def sign_metadata(repomdfile):
     try:
         subprocess.check_call(cmd)
         logging.info("Successfully signed repository metadata file")
-    except subprocess.CalledProcessError, e:
-        print "Unable to sign repository metadata '%s'" % (repomdfile)
+    except subprocess.CalledProcessError as e:
+        print("Unable to sign repository metadata '%s'" % (repomdfile))
         logging.error("Unable to sign repository metadata: %s", e)
         exit(1)
 

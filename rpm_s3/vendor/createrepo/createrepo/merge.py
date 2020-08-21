@@ -96,8 +96,8 @@ class RepoMergeBase:
         #setup our sacks
         try:
             self.yumbase._getSacks(archlist=self.archlist)
-        except yum.Errors.RepoError, e:
-            raise MDError, "Could not setup merge repo pkgsack: %s" % e
+        except yum.Errors.RepoError as e:
+            raise MDError("Could not setup merge repo pkgsack: %s" % e)
 
         myrepos = self.yumbase.repos.listEnabled()
 
@@ -112,7 +112,7 @@ class RepoMergeBase:
                 compsfile = open(comps_fn, 'w')
                 compsfile.write(self.yumbase.comps.xml())
                 compsfile.close()
-            except yum.Errors.GroupsError, e:
+            except yum.Errors.GroupsError as e:
                 # groups not being available shouldn't be a fatal error
                 pass
             else:

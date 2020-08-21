@@ -69,7 +69,8 @@ def bzipFile(source, dest):
 
 def xzFile(source, dest):
     if not 'xz' in _available_compression:
-        raise MDError, "Cannot use xz for compression, library/module is not available"
+        raise MDError(
+            "Cannot use xz for compression, library/module is not available")
         
     s_fn = open(source, 'rb')
     destination = lzma.LZMAFile(dest, 'w')
@@ -113,7 +114,7 @@ def compressFile(source, dest, compress_type):
     elif compress_type == 'gz':
         gzFile(source, dest)
     else:
-        raise MDError, "Unknown compression type %s" % compress_type
+        raise MDError("Unknown compression type %s" % compress_type)
     
 def compressOpen(fn, mode='rb', compress_type=None):
     
@@ -134,13 +135,13 @@ def compressOpen(fn, mode='rb', compress_type=None):
     elif compress_type == 'gz':
         return _gzipOpen(fn, mode)
     else:
-        raise MDError, "Unknown compression type %s" % compress_type
+        raise MDError("Unknown compression type %s" % compress_type)
     
 def returnFD(filename):
     try:
         fdno = os.open(filename, os.O_RDONLY)
     except OSError:
-        raise MDError, "Error opening file"
+        raise MDError("Error opening file")
     return fdno
 
 def checkAndMakeDir(directory):
@@ -160,7 +161,7 @@ def checkAndMakeDir(directory):
     else:
         try:
             os.mkdir(directory)
-        except OSError, e:
+        except OSError as e:
             #errorprint(_('Error creating dir %s: %s') % (directory, e))
             result = False
         else:

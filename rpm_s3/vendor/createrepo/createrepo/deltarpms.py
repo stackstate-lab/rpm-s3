@@ -21,6 +21,7 @@ from yum import misc
 import deltarpm
 from utils import MDError
 
+
 class DeltaRPMPackage:
     """each drpm is one object, you pass it a drpm file
        it opens the file, and pulls the information out in bite-sized chunks :)
@@ -34,8 +35,8 @@ class DeltaRPMPackage:
             self.size = stats[6]
             self.mtime = stats[8]
             del stats
-        except OSError, e:
-            raise MDError, "Error Stat'ing file %s%s" % (basedir, filename)
+        except OSError as e:
+            raise MDError("Error Stat'ing file %s%s" % (basedir, filename))
         self.csum_type = 'sha256'
         self.relativepath = filename
         self.po  = po
@@ -104,6 +105,7 @@ class DeltaRPMPackage:
                     self.size, self.csum_type, self.csum)
         return delta_tag
 
+
 def create_drpm(old_pkg, new_pkg, destdir):
     """make a drpm file, if possible. returns None if nothing could
        be created"""
@@ -118,7 +120,7 @@ def create_drpm(old_pkg, new_pkg, destdir):
         #TODO - check/verify the existing one a bit?
         (code, out) = commands.getstatusoutput(delta_command)
         if code:
-            print "Error genDeltaRPM for %s: exitcode was %s - Reported Error: %s" % (old_pkg.name, code, out)
+            print("Error genDeltaRPM for %s: exitcode was %s - Reported Error: %s" % (old_pkg.name, code, out))
             return None
 
     return delta_rpm_path
