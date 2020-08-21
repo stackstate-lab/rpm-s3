@@ -1,4 +1,5 @@
 #!/bin/bash
+
 mkdir -p ~/.gnupg/
 chmod 700 ~/.gnupg/
 
@@ -12,6 +13,9 @@ default-cache-ttl 46000
 allow-preset-passphrase
 EOF
 
+export PYTHONBINARY=${PYTHONBINARY:-pip}
+
+
 export SIGNING_PRIVATE_PASSPHRASE=${SIGNING_PRIVATE_PASSPHRASE:-}
 # gpg2 --list-secret-keys --with-fingerprint   --with-keygrip
 export KEYGRIP=C2B36F909BB6A3FF7FBC58EB078C665FF047AE5D
@@ -20,18 +24,18 @@ echo  "Reloading gpg-agent..."
 
 export GPPPATH=/usr/libexec
 
-python -mplatform | grep -qi centos && pkill -9 gpg-agent || true
+$PYTHONBINARY -mplatform | grep -qi centos && pkill -9 gpg-agent || true
 
 #python -mplatform | grep -qi centos && source <(gpg-agent --daemon)
-python -mplatform | grep -qi centos && gpg-connect-agent RELOADAGENT /bye || true
+$PYTHONBINARY -mplatform | grep -qi centos && gpg-connect-agent RELOADAGENT /bye || true
 
-python -mplatform | grep -qi debian && gpg-connect-agent RELOADAGENT /bye
+$PYTHONBINARY -mplatform | grep -qi debian && gpg-connect-agent RELOADAGENT /bye
 
-python -mplatform | grep -qi debian && export GPPPATH=/usr/lib/gnupg2
+$PYTHONBINARY -mplatform | grep -qi debian && export GPPPATH=/usr/lib/gnupg2
 
-python -mplatform | grep -qi Ubuntu && gpg-connect-agent RELOADAGENT /bye
+$PYTHONBINARY -mplatform | grep -qi Ubuntu && gpg-connect-agent RELOADAGENT /bye
 
-python -mplatform | grep -qi Ubuntu && export GPPPATH=/usr/lib/gnupg2
+$PYTHONBINARY -mplatform | grep -qi Ubuntu && export GPPPATH=/usr/lib/gnupg2
 
 
 #echo "$SIGNING_PUBLIC_KEY" | gpg --import
