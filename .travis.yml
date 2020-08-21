@@ -12,6 +12,7 @@ env:
     run_opts='--security-opt seccomp=unconfined --tmpfs /run --tmpfs /run/lock -v /sys/fs/cgroup:/sys/fs/cgroup:ro'
     RPMS3_EXTRA_PARAMS='--expect'
     PIPBINARY=pip
+    PYTHONBINARY=python
   - distribution='ubuntu'
     version='18.04'
     init='/sbin/init'
