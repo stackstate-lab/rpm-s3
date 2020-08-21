@@ -21,8 +21,11 @@ if test -t 1; then # if terminal
     fi
 fi
 
+
+export PYTHONBINARY=${PYTHONBINARY:-python}
+
 echo -e "  ${bold}${yellow}uploading ${cyan}test/blank-noop-app-1.0.0-20141120070739.x86_64.rpm${yellow} to bucket ${cyan}pkgr-development-rpm${yellow} codename ${cyan}test${normal}"
-echo rpm-s3 -b pkgr-development-rpm -p test --visibility implied --s3_endpoint_url http://minio1:9000 --s3_signature_version s3v4 test/blank-noop-app-1.0.0-20141120070739.x86_64.rpm
-rpm-s3 -b pkgr-development-rpm -p test --visibility implied --s3_endpoint_url http://minio1:9000 --s3_signature_version s3v4 test/blank-noop-app-1.0.0-20141120070739.x86_64.rpm
+echo $PYTHONBINARY ./rpm-s3 -b pkgr-development-rpm -p test --visibility implied --s3_endpoint_url http://minio1:9000 --s3_signature_version s3v4 test/blank-noop-app-1.0.0-20141120070739.x86_64.rpm
+$PYTHONBINARY rpm-s3 -b pkgr-development-rpm -p test --visibility implied --s3_endpoint_url http://minio1:9000 --s3_signature_version s3v4 test/blank-noop-app-1.0.0-20141120070739.x86_64.rpm
 echo -e "  ${bold}${yellow}validating s3 s3://pkgr-development-rpm/test/${normal}"
 aws --endpoint-url http://minio1:9000/ s3 ls s3://pkgr-development-rpm/test/

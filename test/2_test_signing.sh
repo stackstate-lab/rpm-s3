@@ -32,9 +32,11 @@ fi
 
 cd /etc/rpm_s3
 
+export PYTHONBINARY=${PYTHONBINARY:-python}
+
 echo "${yellow} Validating signing + upload ${yellow}"
 
-./rpm-s3 -b pkgr-development-rpm -p test2 --sign --expect --visibility implied --s3_endpoint_url http://minio1:9000 --s3_signature_version s3v4 test/blank-noop-app-1.0.0-20141120070739.x86_64.rpm
+$PYTHONBINARY ./rpm-s3 -b pkgr-development-rpm -p test2 --sign --expect --visibility implied --s3_endpoint_url http://minio1:9000 --s3_signature_version s3v4 test/blank-noop-app-1.0.0-20141120070739.x86_64.rpm
 
 echo "${yellow} Validating signing ${yellow}"
 

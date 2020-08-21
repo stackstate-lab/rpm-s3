@@ -28,8 +28,10 @@ gpg-connect-agent RELOADAGENT /bye
 #pkill -9 gpg-agent
 #source <(gpg-agent --daemon)
 
+export PYTHONBINARY=${PYTHONBINARY:-python}
+
 echo $SIGNING_PRIVATE_PASSPHRASE | /usr/lib/gnupg2/gpg-preset-passphrase -v -c $(gpg --list-secret-keys --with-fingerprint --with-colons | awk -F: '$1 == "grp" { print $10 }')
 
-$ROOT_DIR/rpm-s3 -b ${BUCKET:="pkgr-development-rpm"} -v -p gh/crohr/test/centos6/master --sign --keep 1000 ${DIR}/*.rpm
+$PYTHONBINARY $ROOT_DIR/rpm-s3 -b ${BUCKET:="pkgr-development-rpm"} -v -p gh/crohr/test/centos6/master --sign --keep 1000 ${DIR}/*.rpm
 
 echo "DONE"

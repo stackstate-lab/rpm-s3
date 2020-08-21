@@ -13,7 +13,7 @@ default-cache-ttl 46000
 allow-preset-passphrase
 EOF
 
-export PYTHONBINARY=${PYTHONBINARY:-pip}
+export PYTHONBINARY=${PYTHONBINARY:-python}
 
 
 export SIGNING_PRIVATE_PASSPHRASE=${SIGNING_PRIVATE_PASSPHRASE:-}
