@@ -228,7 +228,7 @@ class MDCallBack(object):
 
     def log(self, thing):
         """log output"""
-        print thing
+        print(thing)
 
     def progress(self, item, current, total):
         """progress bar"""
@@ -246,13 +246,13 @@ def main(args):
         os.getcwd()
     except OSError, e:
         if e.errno != errno.ENOENT: raise
-        print ('No getcwd() access in current directory.')
+        print('No getcwd() access in current directory.')
         sys.exit(1)
     start_st = time.time()
     conf = createrepo.MetaDataConfig()
     conf = parse_args(args, conf)
     if conf.profile:
-        print ('start time: %0.3f' % (time.time() - start_st))
+        print('start time: %0.3f' % (time.time() - start_st))
 
     mid_st = time.time()
     try:
@@ -264,25 +264,25 @@ def main(args):
                                                  callback=MDCallBack())
             if mdgen.checkTimeStamps():
                 if mdgen.conf.verbose:
-                    print _('repo is up to date')
+                    print(_('repo is up to date'))
                 mdgen._cleanup_tmp_repodata_dir()
                 sys.exit(0)
 
         if conf.profile:
-            print ('mid time: %0.3f' % (time.time() - mid_st))
+            print('mid time: %0.3f' % (time.time() - mid_st))
 
         pm_st = time.time()
         mdgen.doPkgMetadata()
         if conf.profile:
-            print ('pm time: %0.3f' % (time.time() - pm_st))
+            print('pm time: %0.3f' % (time.time() - pm_st))
         rm_st = time.time()
         mdgen.doRepoMetadata()
         if conf.profile:
-            print ('rm time: %0.3f' % (time.time() - rm_st))
+            print('rm time: %0.3f' % (time.time() - rm_st))
         fm_st = time.time()
         mdgen.doFinalMove()
         if conf.profile:
-            print ('fm time: %0.3f' % (time.time() - fm_st))
+            print('fm time: %0.3f' % (time.time() - fm_st))
 
 
     except MDError, errormsg:

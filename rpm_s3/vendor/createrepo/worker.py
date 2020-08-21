@@ -97,7 +97,7 @@ def main(args):
 
         try:
             if not opts.quiet and opts.verbose:
-                print "reading %s" % (pkgfile)
+                print("reading %s" % (pkgfile))
 
             pkg = createrepo.yumbased.CreateRepoPackage(ts, package=pkgpath, 
                                 sumtype=globalopts.get('sumtype', None), 
@@ -105,7 +105,7 @@ def main(args):
             output(pkg.xml_dump_primary_metadata(),
                    pkg.xml_dump_filelists_metadata(),
                    pkg.xml_dump_other_metadata(clog_limit=clog_limit))
-        except yum.Errors.YumBaseError, e:
+        except yum.Errors.YumBaseError as e:
             print >> sys.stderr, "Error: %s" % e
             output()
             continue

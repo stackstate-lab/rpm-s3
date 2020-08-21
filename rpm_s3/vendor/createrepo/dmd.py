@@ -133,7 +133,7 @@ mdtypeinfo = {
 
 
 def usage(progname):
-    print "usage: %s [diff|patch] MDTYPE FILE1 FILE2" % progname
+    print("usage: %s [diff|patch] MDTYPE FILE1 FILE2" % progname)
     sys.exit()
 
 def main(args):

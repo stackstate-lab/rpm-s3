@@ -119,7 +119,7 @@ class SimpleMDCallBack(object):
         print >> sys.stderr, thing
 
     def log(self, thing):
-        print thing
+        print(thing)
 
     def progress(self, item, current, total):
         sys.stdout.write('\r' + ' ' * 80)
@@ -147,7 +147,7 @@ class MetaDataGenerator:
         self.compat_compress = False
 
         if not self.conf.directory and not self.conf.directories:
-            raise MDError, "No directory given on which to run."
+            raise MDError("No directory given on which to run.")
         
         if self.conf.compress_type == 'compat':
             self.compat_compress = True
@@ -157,8 +157,9 @@ class MetaDataGenerator:
             self.conf.compress_type = 'gz'
         
         if self.conf.compress_type not in utils._available_compression:
-            raise MDError, "Compression %s not available: Please choose from: %s" \
-                 % (self.conf.compress_type, ', '.join(utils._available_compression))
+            raise MDError("Compression %s not available: Please choose from: %s" \
+                          % (self.conf.compress_type,
+                             ', '.join(utils._available_compression)))
             
             
         if not self.conf.directories: # just makes things easier later
@@ -203,21 +204,22 @@ class MetaDataGenerator:
                     testdir = os.path.join(self.conf.basedir, mydir)
 
             if not os.path.exists(testdir):
-                raise MDError, _('Directory %s must exist') % mydir
+                raise MDError(_('Directory %s must exist') % mydir)
 
             if not os.path.isdir(testdir):
-                raise MDError, _('%s must be a directory') % mydir
+                raise MDError(_('%s must be a directory') % mydir)
 
         if not os.access(self.conf.outputdir, os.W_OK):
-            raise MDError, _('Directory %s must be writable.') % self.conf.outputdir
+            raise MDError(
+                _('Directory %s must be writable.') % self.conf.outputdir)
 
         temp_output = os.path.join(self.conf.outputdir, self.conf.tempdir)
         if not checkAndMakeDir(temp_output):
-            raise MDError, _('Cannot create/verify %s') % temp_output
+            raise MDError(_('Cannot create/verify %s') % temp_output)
 
         temp_final = os.path.join(self.conf.outputdir, self.conf.finaldir)
         if not checkAndMakeDir(temp_final):
-            raise MDError, _('Cannot create/verify %s') % temp_final
+            raise MDError(_('Cannot create/verify %s') % temp_final)
 
         if self.conf.database:
             # do flock test on temp_final, temp_output
@@ -226,8 +228,9 @@ class MetaDataGenerator:
                 f = open(direc + '/locktest', 'w')
                 try:
                     fcntl.flock(f.fileno(), fcntl.LOCK_EX)
-                except (OSError, IOError), e:
-                    raise MDError, _("Could not create exclusive lock in %s and sqlite database generation enabled. Is this path on nfs? Is your lockd running?") % direc
+                except (OSError, IOError) as e:
+                    raise MDError(_(
+                        "Could not create exclusive lock in %s and sqlite database generation enabled. Is this path on nfs? Is your lockd running?") % direc)
                 else:
                     os.unlink(direc + '/locktest')
                 
@@ -235,11 +238,12 @@ class MetaDataGenerator:
             temp_delta = os.path.join(self.conf.outputdir,
                                       self.conf.delta_relative)
             if not checkAndMakeDir(temp_delta):
-                raise MDError, _('Cannot create/verify %s') % temp_delta
+                raise MDError(_('Cannot create/verify %s') % temp_delta)
             self.conf.deltadir = temp_delta
 
         if os.path.exists(os.path.join(self.conf.outputdir, self.conf.olddir)):
-            raise MDError, _('Old data directory exists, please remove: %s') % self.conf.olddir
+            raise MDError(_(
+                'Old data directory exists, please remove: %s') % self.conf.olddir)
 
         # make sure we can write to where we want to write to:
         # and pickup the mdtimestamps while we're at it
@@ -252,7 +256,8 @@ class MetaDataGenerator:
                                                                  direc))
             if os.path.exists(filepath):
                 if not os.access(filepath, os.W_OK):
-                    raise MDError, _('error in must be able to write to metadata dir:\n  -> %s') % filepath
+                    raise MDError(_(
+                        'error in must be able to write to metadata dir:\n  -> %s') % filepath)
 
                 if self.conf.checkts:
                     # checking for repodata/repomd.xml - not just the data dir
@@ -270,7 +275,7 @@ class MetaDataGenerator:
                 a = os.path.join(self.package_dir, self.conf.groupfile)
 
             if not os.path.exists(a):
-                raise MDError, _('Error: groupfile %s cannot be found.' % a)
+                raise MDError(_('Error: groupfile %s cannot be found.' % a))
 
             self.conf.groupfile = a
 
@@ -279,7 +284,7 @@ class MetaDataGenerator:
             if not os.path.isabs(a):
                 a = os.path.join(self.conf.outputdir, a)
             if not checkAndMakeDir(a):
-                raise MDError, _('Error: cannot open/write to cache dir %s' % a)
+                raise MDError(_('Error: cannot open/write to cache dir %s' % a))
 
             self.conf.cachedir = a
 
@@ -409,7 +414,7 @@ class MetaDataGenerator:
             self.openMetadataDocs()
             self.writeMetadataDocs(packages)
             self.closeMetadataDocs()
-        except (IOError, OSError), e:
+        except (IOError, OSError) as e:
             raise MDError, _('Cannot access/write repodata files: %s') % e
 
 
@@ -480,7 +485,7 @@ class MetaDataGenerator:
             pkgpath = self.package_dir
 
         if not rpmfile.strip():
-            raise MDError, "Blank filename passed in, skipping"
+            raise MDError("Blank filename passed in, skipping")
 
         if rpmfile.find("://") != -1:
 
@@ -495,9 +500,9 @@ class MetaDataGenerator:
                 self.callback.log('\nDownloading %s' % rpmfile)
             try:
                 rpmfile = self.grabber.urlgrab(rpmfile, dest)
-            except grabber.URLGrabError, e:
-                raise MDError, "Unable to retrieve remote package %s: %s" % (
-                                                                     rpmfile, e)
+            except grabber.URLGrabError as e:
+                raise MDError("Unable to retrieve remote package %s: %s" % (
+                    rpmfile, e))
 
 
         else:
@@ -514,16 +519,16 @@ class MetaDataGenerator:
             po = yumbased.CreateRepoPackage(self.ts, rpmfile,
                                             sumtype=self.conf.sumtype,
                                             external_data = external_data)
-        except Errors.MiscError, e:
-            raise MDError, "Unable to open package: %s" % e
+        except Errors.MiscError as e:
+            raise MDError("Unable to open package: %s" % e)
 
         for r in po.requires_print:
             if r.startswith('rpmlib('):
                 self.rpmlib_reqs[r] = 1
 
         if po.checksum in (None, ""):
-            raise MDError, "No Package ID found for package %s, not going to" \
-                           " add it" % po
+            raise MDError("No Package ID found for package %s, not going to" \
+                          " add it" % po)
 
         return po
 
@@ -776,7 +781,7 @@ class MetaDataGenerator:
                 try:
                     thispo = yumbased.CreateRepoPackage(self.ts, fn,
                                                      sumtype=self.conf.sumtype)
-                except Errors.MiscError, e:
+                except Errors.MiscError as e:
                     continue
                 if (thispo.name, thispo.arch) != (pkg.name, pkg.arch):
                     # not the same, doesn't matter
@@ -1097,12 +1102,12 @@ class MetaDataGenerator:
             fo = open(repofilepath, 'w')
             fo.write(repomd.dump_xml())
             fo.close()
-        except (IOError, OSError, TypeError), e:
+        except (IOError, OSError, TypeError) as e:
             self.callback.errorlog(
                   _('Error saving temp file for repomd.xml: %s') % repofilepath)
             self.callback.errorlog('Error was: %s') % str(e)
             fo.close()
-            raise MDError, 'Could not save temp file: %s' % repofilepath
+            raise MDError('Could not save temp file: %s' % repofilepath)
             
 
     def doFinalMove(self):
@@ -1117,8 +1122,8 @@ class MetaDataGenerator:
             try:
                 os.rename(output_final_dir, output_old_dir)
             except:
-                raise MDError, _('Error moving final %s to old dir %s' % (
-                                 output_final_dir, output_old_dir))
+                raise MDError(_('Error moving final %s to old dir %s' % (
+                    output_final_dir, output_old_dir)))
 
         output_temp_dir = os.path.join(self.conf.outputdir, self.conf.tempdir)
 
@@ -1127,7 +1132,7 @@ class MetaDataGenerator:
         except:
             # put the old stuff back
             os.rename(output_old_dir, output_final_dir)
-            raise MDError, _('Error moving final metadata into place')
+            raise MDError(_('Error moving final metadata into place'))
 
         for f in ['primaryfile', 'filelistsfile', 'otherfile', 'repomdfile',
                  'groupfile']:
@@ -1140,9 +1145,10 @@ class MetaDataGenerator:
             if os.path.exists(oldfile):
                 try:
                     os.remove(oldfile)
-                except OSError, e:
-                    raise MDError, _(
-                    'Could not remove old metadata file: %s: %s') % (oldfile, e)
+                except OSError as e:
+                    raise MDError(_(
+                        'Could not remove old metadata file: %s: %s') % (
+                                  oldfile, e))
 
         old_to_remove = []
         old_pr = []
@@ -1178,9 +1184,10 @@ class MetaDataGenerator:
                      'primary.sqlite') or oldfile in old_to_remove:
                 try:
                     os.remove(oldfile)
-                except (OSError, IOError), e:
-                    raise MDError, _(
-                    'Could not remove old metadata file: %s: %s') % (oldfile, e)
+                except (OSError, IOError) as e:
+                    raise MDError(_(
+                        'Could not remove old metadata file: %s: %s') % (
+                                  oldfile, e))
                 continue
 
             if os.path.exists(finalfile):
@@ -1190,16 +1197,17 @@ class MetaDataGenerator:
                         shutil.rmtree(oldfile)
                     else:
                         os.remove(oldfile)
-                except OSError, e:
-                    raise MDError, _(
-                    'Could not remove old metadata file: %s: %s') % (oldfile, e)
+                except OSError as e:
+                    raise MDError(_(
+                        'Could not remove old metadata file: %s: %s') % (
+                                  oldfile, e))
             else:
                 try:
                     os.rename(oldfile, finalfile)
-                except OSError, e:
+                except OSError as e:
                     msg = _('Could not restore old non-metadata file: %s -> %s') % (oldfile, finalfile)
                     msg += _('Error was %s') % e
-                    raise MDError, msg
+                    raise MDError(msg)
 
         self._cleanup_tmp_repodata_dir()
         self._cleanup_update_tmp_dir()        
@@ -1221,7 +1229,7 @@ class MetaDataGenerator:
                 fo.write('\n'.join(self.read_pkgs))
                 fo.flush()
                 fo.close()
-            except (OSError, IOError), e:
+            except (OSError, IOError) as e:
                 self.errorlog(_('Could not write out readpkgs list: %s')
                               % self.conf.read_pkgs_list)
                 self.errorlog(_('Error was %s') % e)
@@ -1234,7 +1242,7 @@ class MetaDataGenerator:
             if os.path.exists(dirpath):
                 try:
                     os.rmdir(dirpath)
-                except OSError, e:
+                except OSError as e:
                     self.errorlog(_('Could not remove  temp metadata dir: %s')
                                   % dirbase)
                     self.errorlog(_('Error was %s') % e)
@@ -1248,9 +1256,9 @@ class MetaDataGenerator:
         destdir = os.path.join(self.conf.outputdir, self.conf.tempdir)
         try:
             self.md_sqlite = MetaDataSqlite(destdir)
-        except sqlite.OperationalError, e:
-            raise MDError, _('Cannot create sqlite databases: %s.\n'\
-                'Maybe you need to clean up a .repodata dir?') % e
+        except sqlite.OperationalError as e:
+            raise MDError(_('Cannot create sqlite databases: %s.\n' \
+                            'Maybe you need to clean up a .repodata dir?') % e)
 
 
 
@@ -1317,8 +1325,8 @@ class SplitMetaDataGenerator(MetaDataGenerator):
                 mediano += 1
             self.conf.baseurl = self._getFragmentUrl(self.conf.baseurl, 1)
             self.closeMetadataDocs()
-        except (IOError, OSError), e:
-            raise MDError, _('Cannot access/write repodata files: %s') % e
+        except (IOError, OSError) as e:
+            raise MDError(_('Cannot access/write repodata files: %s') % e)
 
 
 
