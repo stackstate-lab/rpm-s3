@@ -86,7 +86,7 @@ def main(args):
     try:
         rmbase.merge_repos()
         rmbase.write_metadata()
-    except MDError, e:
+    except MDError as e:
         print >> sys.stderr, "Could not merge repos: %s" % e
         sys.exit(1)
         

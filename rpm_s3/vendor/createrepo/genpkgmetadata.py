@@ -244,7 +244,7 @@ def main(args):
     """createrepo from cli main flow"""
     try:
         os.getcwd()
-    except OSError, e:
+    except OSError as e:
         if e.errno != errno.ENOENT: raise
         print ('No getcwd() access in current directory.')
         sys.exit(1)
@@ -285,7 +285,7 @@ def main(args):
             print ('fm time: %0.3f' % (time.time() - fm_st))
 
 
-    except MDError, errormsg:
+    except MDError as errormsg:
         errorprint(_('%s') % errormsg)
         sys.exit(1)
 

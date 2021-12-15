@@ -7,3 +7,4 @@ dist/
 .envrc
 *.pyc
 test/Dockerfile
+.idea/

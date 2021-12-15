@@ -226,7 +226,7 @@ class MetaDataGenerator:
                 f = open(direc + '/locktest', 'w')
                 try:
                     fcntl.flock(f.fileno(), fcntl.LOCK_EX)
-                except (OSError, IOError), e:
+                except (OSError, IOError) as e:
                     raise MDError, _("Could not create exclusive lock in %s and sqlite database generation enabled. Is this path on nfs? Is your lockd running?") % direc
                 else:
                     os.unlink(direc + '/locktest')
@@ -409,7 +409,7 @@ class MetaDataGenerator:
             self.openMetadataDocs()
             self.writeMetadataDocs(packages)
             self.closeMetadataDocs()
-        except (IOError, OSError), e:
+        except (IOError, OSError) as e:
             raise MDError, _('Cannot access/write repodata files: %s') % e
 
 
@@ -495,7 +495,7 @@ class MetaDataGenerator:
                 self.callback.log('\nDownloading %s' % rpmfile)
             try:
                 rpmfile = self.grabber.urlgrab(rpmfile, dest)
-            except grabber.URLGrabError, e:
+            except grabber.URLGrabError as e:
                 raise MDError, "Unable to retrieve remote package %s: %s" % (
                                                                      rpmfile, e)
 
@@ -514,7 +514,7 @@ class MetaDataGenerator:
             po = yumbased.CreateRepoPackage(self.ts, rpmfile,
                                             sumtype=self.conf.sumtype,
                                             external_data = external_data)
-        except Errors.MiscError, e:
+        except Errors.MiscError as e:
             raise MDError, "Unable to open package: %s" % e
 
         for r in po.requires_print:
@@ -701,7 +701,7 @@ class MetaDataGenerator:
                     try:
                         po = self.read_in_package(pkgfile, pkgpath=pkgpath, reldir=reldir)
                         self._do_delta_rpm_package(po)
-                    except MDError, e:
+                    except MDError as e:
                         errorprint(e)
                         continue
                 self.read_pkgs.append(pkgfile)
@@ -776,7 +776,7 @@ class MetaDataGenerator:
                 try:
                     thispo = yumbased.CreateRepoPackage(self.ts, fn,
                                                      sumtype=self.conf.sumtype)
-                except Errors.MiscError, e:
+                except Errors.MiscError as e:
                     continue
                 if (thispo.name, thispo.arch) != (pkg.name, pkg.arch):
                     # not the same, doesn't matter
@@ -1097,7 +1097,7 @@ class MetaDataGenerator:
             fo = open(repofilepath, 'w')
             fo.write(repomd.dump_xml())
             fo.close()
-        except (IOError, OSError, TypeError), e:
+        except (IOError, OSError, TypeError) as e:
             self.callback.errorlog(
                   _('Error saving temp file for repomd.xml: %s') % repofilepath)
             self.callback.errorlog('Error was: %s') % str(e)
@@ -1140,7 +1140,7 @@ class MetaDataGenerator:
             if os.path.exists(oldfile):
                 try:
                     os.remove(oldfile)
-                except OSError, e:
+                except OSError as e:
                     raise MDError, _(
                     'Could not remove old metadata file: %s: %s') % (oldfile, e)
 
@@ -1178,7 +1178,7 @@ class MetaDataGenerator:
                      'primary.sqlite') or oldfile in old_to_remove:
                 try:
                     os.remove(oldfile)
-                except (OSError, IOError), e:
+                except (OSError, IOError) as e:
                     raise MDError, _(
                     'Could not remove old metadata file: %s: %s') % (oldfile, e)
                 continue
@@ -1190,13 +1190,13 @@ class MetaDataGenerator:
                         shutil.rmtree(oldfile)
                     else:
                         os.remove(oldfile)
-                except OSError, e:
+                except OSError as e:
                     raise MDError, _(
                     'Could not remove old metadata file: %s: %s') % (oldfile, e)
             else:
                 try:
                     os.rename(oldfile, finalfile)
-                except OSError, e:
+                except OSError as e:
                     msg = _('Could not restore old non-metadata file: %s -> %s') % (oldfile, finalfile)
                     msg += _('Error was %s') % e
                     raise MDError, msg
@@ -1221,7 +1221,7 @@ class MetaDataGenerator:
                 fo.write('\n'.join(self.read_pkgs))
                 fo.flush()
                 fo.close()
-            except (OSError, IOError), e:
+            except (OSError, IOError) as e:
                 self.errorlog(_('Could not write out readpkgs list: %s')
                               % self.conf.read_pkgs_list)
                 self.errorlog(_('Error was %s') % e)
@@ -1234,7 +1234,7 @@ class MetaDataGenerator:
             if os.path.exists(dirpath):
                 try:
                     os.rmdir(dirpath)
-                except OSError, e:
+                except OSError as e:
                     self.errorlog(_('Could not remove  temp metadata dir: %s')
                                   % dirbase)
                     self.errorlog(_('Error was %s') % e)
@@ -1248,7 +1248,7 @@ class MetaDataGenerator:
         destdir = os.path.join(self.conf.outputdir, self.conf.tempdir)
         try:
             self.md_sqlite = MetaDataSqlite(destdir)
-        except sqlite.OperationalError, e:
+        except sqlite.OperationalError as e:
             raise MDError, _('Cannot create sqlite databases: %s.\n'\
                 'Maybe you need to clean up a .repodata dir?') % e
 
@@ -1317,7 +1317,7 @@ class SplitMetaDataGenerator(MetaDataGenerator):
                 mediano += 1
             self.conf.baseurl = self._getFragmentUrl(self.conf.baseurl, 1)
             self.closeMetadataDocs()
-        except (IOError, OSError), e:
+        except (IOError, OSError) as e:
             raise MDError, _('Cannot access/write repodata files: %s') % e
 
 

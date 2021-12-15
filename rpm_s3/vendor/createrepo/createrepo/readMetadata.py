@@ -57,7 +57,7 @@ class MetadataIndex(object):
         self.pkg_tups_by_path = {}
         try:
             self.scan()
-        except YumBaseError, e:
+        except YumBaseError as e:
             print "Could not find valid repo at: %s" % self.outputdir
         
 

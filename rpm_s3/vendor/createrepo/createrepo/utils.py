@@ -160,7 +160,7 @@ def checkAndMakeDir(directory):
     else:
         try:
             os.mkdir(directory)
-        except OSError, e:
+        except OSError as e:
             #errorprint(_('Error creating dir %s: %s') % (directory, e))
             result = False
         else:

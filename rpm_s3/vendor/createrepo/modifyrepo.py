@@ -53,7 +53,7 @@ class RepoMetadata:
         try:
             self.repoobj = RepoMD(self.repodir)
             self.repoobj.parse(self.repomdxml)
-        except RepoMDError, e:
+        except RepoMDError as e:
             raise MDError, 'Could not parse %s' % self.repomdxml
 
     def _get_mdtype(self, mdname, mdtype=None):
@@ -87,7 +87,7 @@ class RepoMetadata:
         try:
             fname = os.path.basename(repodata.location[1])
             os.remove(os.path.join(self.repodir, fname))
-        except OSError, ex:
+        except OSError as ex:
             if ex.errno != 2:
                 # continue on a missing file
                 raise MDError("could not remove file %s" % repodata.location[1])
@@ -206,7 +206,7 @@ def main(args):
     repodir = argsleft[1]
     try:
         repomd = RepoMetadata(repodir)
-    except MDError, e:
+    except MDError as e:
         print "Could not access repository: %s" % str(e)
         return 1
 
@@ -245,7 +245,7 @@ def main(args):
     if opts.remove:
         try:
             repomd.remove(metadata, mdtype=opts.mdtype)
-        except MDError, ex:
+        except MDError as ex:
             print "Could not remove metadata: %s" % (metadata, str(ex))
             return 1
         return
@@ -253,7 +253,7 @@ def main(args):
     # add
     try:
         repomd.add(metadata, mdtype=opts.mdtype)
-    except MDError, e:
+    except MDError as e:
         print "Could not add metadata from file %s: %s" % (metadata, str(e))
         return 1
     
