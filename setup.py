@@ -12,11 +12,11 @@ from shutil import rmtree
 from setuptools import find_packages, setup, Command
 
 # Package meta-data.
-NAME = 'sa-rpm-s3'
+NAME = 'sts-rpm-s3'
 DESCRIPTION = 'This small tool allows you to maintain YUM repositories of RPM packages on S3. The advantage of this tool is that it does not need a full copy of the repo to operate. Just give it the new package to add, and it will just update the repodata metadata, and upload the given rpm file.'
-URL = 'https://github.com/Voronenko/rpm-s3'
-EMAIL = 'git@voronenko.info'
-AUTHOR = 'Cyril Rohr - Portions (c) 2013, rockpack ltd, light mods by Vyacheslav Voronenko'
+URL = 'https://github.com/stackstate-lab/rpm-s3'
+EMAIL = 'info@stackstate.com'
+AUTHOR = 'Cyril Rohr - Portions (c) 2013, rockpack ltd, light mods by Vyacheslav Voronenko and Juliano Krieger'
 REQUIRES_PYTHON = '>=3.6.0'
 VERSION = None
 
