@@ -1264,7 +1264,10 @@ class SplitMetaDataGenerator(MetaDataGenerator):
         MetaDataGenerator.__init__(self, config_obj=config_obj, callback=None)
 
     def _getFragmentUrl(self, url, fragment):
-        import urlparse
+        try:
+            from urlparse import urlparse
+        except ImportError:
+            from urllib.parse import urlparse
         urlparse.uses_fragment.append('media')
         if not url:
             return url

@@ -4,7 +4,6 @@
 import os
 import sys
 import time
-import urlparse
 import tempfile
 import shutil
 import optparse
@@ -15,6 +14,11 @@ import boto3
 import subprocess
 import pexpect
 from botocore.errorfactory import ClientError
+
+try:
+    from urlparse import urlparse
+except ImportError:
+    from urllib.parse import urlparse
 
 try:
     from rpm_s3.vendor.createrepo import createrepo
