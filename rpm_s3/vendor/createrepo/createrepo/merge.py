@@ -97,7 +97,7 @@ class RepoMergeBase:
         try:
             self.yumbase._getSacks(archlist=self.archlist)
         except yum.Errors.RepoError as e:
-            raise MDError, "Could not setup merge repo pkgsack: %s" % e
+            raise MDError("Could not setup merge repo pkgsack: %s" % e)
 
         myrepos = self.yumbase.repos.listEnabled()
 

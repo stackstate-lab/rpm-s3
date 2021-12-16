@@ -35,7 +35,7 @@ class DeltaRPMPackage:
             self.mtime = stats[8]
             del stats
         except OSError as e:
-            raise MDError, "Error Stat'ing file %s%s" % (basedir, filename)
+            raise MDError("Error Stat'ing file %s%s" % (basedir, filename))
         self.csum_type = 'sha256'
         self.relativepath = filename
         self.po  = po

@@ -48,13 +48,13 @@ class RepoMetadata:
         self.compress_type = _available_compression[-1] # best available
 
         if not os.path.exists(self.repomdxml):
-            raise MDError, '%s not found' % self.repomdxml
+            raise MDError('%s not found' % self.repomdxml)
 
         try:
             self.repoobj = RepoMD(self.repodir)
             self.repoobj.parse(self.repomdxml)
         except RepoMDError as e:
-            raise MDError, 'Could not parse %s' % self.repomdxml
+            raise MDError('Could not parse %s' % self.repomdxml)
 
     def _get_mdtype(self, mdname, mdtype=None):
         """ Get mdtype from existing mdtype or from a mdname. """
@@ -99,7 +99,7 @@ class RepoMetadata:
         """
         md = None
         if not metadata:
-            raise MDError, 'metadata cannot be None'
+            raise MDError('metadata cannot be None')
         if isinstance(metadata, minidom.Document):
             md = metadata.toxml()
             mdname = 'updateinfo.xml'
@@ -115,9 +115,9 @@ class RepoMetadata:
                 md = oldmd.read()
                 oldmd.close()
             else:
-                raise MDError, '%s not found' % metadata
+                raise MDError('%s not found' % metadata)
         else:
-            raise MDError, 'invalid metadata type'
+            raise MDError('invalid metadata type')
 
         ## Compress the metadata and move it into the repodata
         mdtype = self._get_mdtype(mdname, mdtype)
