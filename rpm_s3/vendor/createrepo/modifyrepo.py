@@ -67,20 +67,20 @@ class RepoMetadata:
 
     def _print_repodata(self, repodata):
         """ Print repodata details. """
-        print "           type =", repodata.type
-        print "       location =", repodata.location[1]
-        print "       checksum =", repodata.checksum[1]
-        print "      timestamp =", repodata.timestamp
-        print "  open-checksum =", repodata.openchecksum[1]
-        print "           size =", repodata.size
-        print "      open-size =", repodata.opensize
+        print("           type =", repodata.type)
+        print("       location =", repodata.location[1])
+        print("       checksum =", repodata.checksum[1])
+        print("      timestamp =", repodata.timestamp)
+        print("  open-checksum =", repodata.openchecksum[1])
+        print("           size =", repodata.size)
+        print("      open-size =", repodata.opensize)
 
     def _write_repomd(self):
         """ Write the updated repomd.xml. """
         outmd = file(self.repomdxml, 'w')
         outmd.write(self.repoobj.dump_xml())
         outmd.close()
-        print "Wrote:", self.repomdxml
+        print("Wrote:", self.repomdxml)
 
     def _remove_repodata_file(self, repodata):
         """ Remove a file specified in repodata location """
@@ -130,7 +130,7 @@ class RepoMetadata:
             
         newmd.write(md)
         newmd.close()
-        print "Wrote:", destmd
+        print("Wrote:", destmd)
 
         if self.unique_md_filenames:
             csum, destmd = checksum_and_rename(destmd, self.checksum_type)
@@ -166,11 +166,11 @@ class RepoMetadata:
 
         old_rd = self.repoobj.repoData.pop(mdtype, None)
         if old_rd is None:
-            print "Metadata not found: %s" % mdtype
+            print("Metadata not found: %s" % mdtype)
             return
 
         self._remove_repodata_file(old_rd)
-        print "Removed:"
+        print("Removed:")
         self._print_repodata(old_rd)
         self._write_repomd()
 
@@ -207,7 +207,7 @@ def main(args):
     try:
         repomd = RepoMetadata(repodir)
     except MDError as e:
-        print "Could not access repository: %s" % str(e)
+        print("Could not access repository: %s" % str(e))
         return 1
 
     try:
@@ -234,10 +234,11 @@ def main(args):
     repomd.unique_md_filenames = opts.unique_md_filenames
     repomd.compress = opts.compress
     if opts.compress_type not in _available_compression:
-        print "Compression %s not available: Please choose from: %s" % (opts.compress_type, ', '.join(_available_compression))
+        print("Compression %s not available: Please choose from: %s" % (
+        opts.compress_type, ', '.join(_available_compression)))
         return 1
     if opts.sumtype not in _available_checksums:
-        print "Checksum %s not available: Please choose from: %s" % (opts.sumtype, ', '.join(_available_checksums))
+        print("Checksum %s not available: Please choose from: %s" % (opts.sumtype, ', '.join(_available_checksums)))
         return 1
     repomd.compress_type = opts.compress_type
 
@@ -246,7 +247,7 @@ def main(args):
         try:
             repomd.remove(metadata, mdtype=opts.mdtype)
         except MDError as ex:
-            print "Could not remove metadata: %s" % (metadata, str(ex))
+            print("Could not remove metadata: %s" % (metadata, str(ex)))
             return 1
         return
 
@@ -254,7 +255,7 @@ def main(args):
     try:
         repomd.add(metadata, mdtype=opts.mdtype)
     except MDError as e:
-        print "Could not add metadata from file %s: %s" % (metadata, str(e))
+        print("Could not add metadata from file %s: %s" % (metadata, str(e)))
         return 1
     
 

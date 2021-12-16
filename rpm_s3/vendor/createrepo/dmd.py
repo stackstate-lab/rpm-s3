@@ -79,7 +79,7 @@ class MdType(object):
 
         diff.set("packages", str(len(removals) + len(additions)))
 
-        print tostring(diff, pretty_print=True)
+        print(tostring(diff, pretty_print=True))
 
     def patch_tree(self, oldtree, deltatree):
         oldroot = oldtree.getroot()
@@ -107,7 +107,7 @@ class MdType(object):
         oldcount = int(oldroot.get('packages'))
         newcount = oldcount + len(additions) - len(removals)
         oldroot.set('packages', str(newcount))
-        print tostring(oldtree, pretty_print=True)
+        print(tostring(oldtree, pretty_print=True))
 
 
 class OtherMdType(MdType):
@@ -133,7 +133,7 @@ mdtypeinfo = {
 
 
 def usage(progname):
-    print "usage: %s [diff|patch] MDTYPE FILE1 FILE2" % progname
+    print("usage: %s [diff|patch] MDTYPE FILE1 FILE2" % progname)
     sys.exit()
 
 def main(args):

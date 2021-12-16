@@ -97,7 +97,7 @@ def main(args):
 
         try:
             if not opts.quiet and opts.verbose:
-                print "reading %s" % (pkgfile)
+                print("reading %s" % (pkgfile))
 
             pkg = createrepo.yumbased.CreateRepoPackage(ts, package=pkgpath, 
                                 sumtype=globalopts.get('sumtype', None), 

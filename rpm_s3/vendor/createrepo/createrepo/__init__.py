@@ -119,7 +119,7 @@ class SimpleMDCallBack(object):
         print >> sys.stderr, thing
 
     def log(self, thing):
-        print thing
+        print(thing)
 
     def progress(self, item, current, total):
         sys.stdout.write('\r' + ' ' * 80)

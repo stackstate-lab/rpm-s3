@@ -118,7 +118,7 @@ def create_drpm(old_pkg, new_pkg, destdir):
         #TODO - check/verify the existing one a bit?
         (code, out) = commands.getstatusoutput(delta_command)
         if code:
-            print "Error genDeltaRPM for %s: exitcode was %s - Reported Error: %s" % (old_pkg.name, code, out)
+            print("Error genDeltaRPM for %s: exitcode was %s - Reported Error: %s" % (old_pkg.name, code, out))
             return None
 
     return delta_rpm_path
